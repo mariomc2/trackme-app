@@ -1,54 +1,25 @@
-import React from 'react';
+import React, {useContext, useEffect} from 'react';
 import { TouchableOpacity, StyleSheet, Text, View } from 'react-native';
-import {MainContext} from '../Context'
+import {TrackContext} from '../contexts/TrackContext';
 
 import moment from 'moment';
 
+const Timer = () =>{
+  const { tracking, dispatch } = useContext(TrackContext);
 
-export default class Timer extends React.Component {
-  
-  
-  async componentDidMount() {
-    try {
-      
-    } catch (e) {
+  const bg = tracking.isTracking ? '#d9534f' : '#5cb85c';
+  const btn_txt = tracking.isTracking ? "Stop Activity" : "Start Activity";
 
-      this.setState({
-        loading: false,
-        error: true,
-      });
-      console.log(e)
-    }
-  }
-
-  renderActionButton(isTracking, toggleTimer) {
-    if(isTracking){
-      return(
-        <TouchableOpacity onPress={toggleTimer} style={[styles.button, {backgroundColor: '#d9534f'}]}>
-          <Text style={styles.buttonText}>Stop Activity</Text>
-        </TouchableOpacity>
-      )
-    }
-    return(
-        <TouchableOpacity onPress={toggleTimer} style={[styles.button, {backgroundColor: '#5cb85c'}]}>
-          <Text style={styles.buttonText}>Start Activity</Text>
-        </TouchableOpacity>
-      )
-  }
-
-  render() {
-
-    return (
-      <View style={styles.container}>
-        <MainContext.Consumer>
-          {({isTracking, toggleTimer}) => (this.renderActionButton(isTracking, toggleTimer))}
-        </MainContext.Consumer>
-      </View>
-    );
-  }
+  return(
+    <View style={styles.container}>
+      <TouchableOpacity onPress={() => dispatch({ type: 'TOGGLE_TRACKING' })} style={[styles.button, {backgroundColor: bg}]}>
+        <Text style={styles.buttonText}>{btn_txt}</Text>
+      </TouchableOpacity>
+    </View>
+  )
 }
 
-
+export default Timer;
 
 const styles = StyleSheet.create({
   container: {

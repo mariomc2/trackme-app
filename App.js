@@ -3,7 +3,7 @@ import { Platform, StatusBar, StyleSheet, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
-import {MainContext} from './Context'
+import TrackContextProvider from './contexts/TrackContext';
 
 import Home from './screens/Home';
 import Track from './screens/Track';
@@ -34,7 +34,7 @@ export default class App extends React.Component {
     const { isTracking } = this.state;
     return (
       <View style={styles.container}>
-        <MainContext.Provider value={this.state}>
+        <TrackContextProvider>
           <NavigationContainer>
             <Stack.Navigator>
               <Stack.Screen
@@ -59,7 +59,7 @@ export default class App extends React.Component {
               />
             </Stack.Navigator>
           </NavigationContainer>
-        </MainContext.Provider>
+        </TrackContextProvider>
       </View>
     );
    }

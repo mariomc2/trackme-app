@@ -1,15 +1,20 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import { ImageBackground, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import MapView from 'react-native-maps';
 import { useNavigation } from '@react-navigation/native';
-
-import {MainContext} from '../Context'
+import {TrackContext} from '../contexts/TrackContext';
 
 import bgimg from '../assets/bg.jpg';
 
 export default function Home() {
   const navigation = useNavigation();
   const { navigate } = navigation;
+
+  const { tracking, dispatch } = useContext(TrackContext);
+
+  const bg = tracking.isTracking ? '#ff8800' : '#f0ad4e';
+  const btn_txt = tracking.isTracking ? "Activity in Progress" : "Start Activity";
+
   return (
     <ImageBackground
       source={bgimg}
@@ -19,9 +24,9 @@ export default function Home() {
       <View style={styles.container}>
         <Text></Text>
 
-        <MainContext.Consumer>
-          {({isTracking}) => (renderActionButton(isTracking, navigate))}
-        </MainContext.Consumer>
+        <TouchableOpacity onPress={() => navigate('Track')} style={[styles.button, {backgroundColor: bg}]}>
+          <Text style={styles.buttonText}>{btn_txt}</Text>
+        </TouchableOpacity>
 
         <TouchableOpacity onPress={() => navigate('RunList')} style={[styles.button, {backgroundColor: '#0275d8'}]}>
           <Text style={styles.buttonText}>History of Activities</Text>
@@ -30,21 +35,6 @@ export default function Home() {
       </View>
     </ImageBackground>
   );
-}
-
-function renderActionButton(isTracking, navigate) {
-  if(isTracking){
-    return(
-      <TouchableOpacity onPress={() => navigate('Track')} style={[styles.button, {backgroundColor: '#ff8800'}]}>
-        <Text style={styles.buttonText}>Activity in Progress</Text>
-      </TouchableOpacity>
-    )
-  }
-  return(
-      <TouchableOpacity onPress={() => navigate('Track')} style={[styles.button, {backgroundColor: '#f0ad4e'}]}>
-        <Text style={styles.buttonText}>Start Activity</Text>
-      </TouchableOpacity>
-    )
 }
 
 const styles = StyleSheet.create({
