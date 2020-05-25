@@ -12,7 +12,7 @@ export default function Home() {
 
   const { tracking, dispatch } = useContext(TrackContext);
 
-  const bg = tracking.isTracking ? '#ff8800' : '#f0ad4e';
+  const btn_bg = tracking.isTracking ? '#ff8800' : '#f0ad4e';
   const btn_txt = tracking.isTracking ? "Activity in Progress" : "Start Activity";
 
   return (
@@ -24,7 +24,7 @@ export default function Home() {
       <View style={styles.container}>
         <Text></Text>
 
-        <TouchableOpacity onPress={() => navigate('Track')} style={[styles.button, {backgroundColor: bg}]}>
+        <TouchableOpacity onPress={() => navigate('Track')} style={[styles.button, {backgroundColor: btn_bg}]}>
           <Text style={styles.buttonText}>{btn_txt}</Text>
         </TouchableOpacity>
 
