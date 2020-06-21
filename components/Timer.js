@@ -14,17 +14,19 @@ const Timer = () =>{
   const btn_txt = tracking.isTracking ? "Stop Activity" : "Start Activity";
 
   function iniTimer(startTime){
-    return setInterval(() => 
+    const interval = setInterval(() => 
         setDuration(moment(Date.now()).diff(moment(startTime))), 1000);
+    setTimerId(interval);
   }
   function toggle(){
     if(!tracking.isTracking){
-      const startTime = Date.now();   
-      setTimerId(iniTimer(startTime));
-      dispatch({ type: 'START_TRACKING', startTime });
+      const startTime = Date.now(); 
+      iniTimer(startTime);
+      dispatch({ type: 'START_TRACKING', startTime });      
     }
     else{
       clearInterval(timerId);
+      setTimerId(null);
       setDuration(null);
       dispatch({ type: 'STOP_TRACKING' });
     }
@@ -32,8 +34,16 @@ const Timer = () =>{
   }
 
   useEffect(()=>{
-    tracking.isTracking ? setTimerId(iniTimer(tracking.startTime)) : null;
+    if(tracking.isTracking){
+      iniTimer(tracking.startTime);
+    }
   },[]);
+
+  useEffect(()=>{
+    return function cleanup(){
+      clearInterval(timerId);
+    }
+  },[timerId]);
 
   return(
     <View style={styles.container}>
