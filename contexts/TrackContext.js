@@ -8,7 +8,7 @@ const TrackContextProvider = (props) => {
   const [tracking, dispatch] = useReducer(trackReducer, {isTracking: false});
 
   function setLocation(locations){
-  	console.log("Locations: ", locations);
+  	console.log("Locations from Context 1:: ", locations);
   }
 
   TaskManager.defineTask('background-location-task', ({ data, error }) => {
@@ -34,6 +34,6 @@ export default TrackContextProvider;
 
 const setLocation = (locations) => {
 	dispatch({ type: 'SET_LOCATION', locations })
-	console.log("Locations: ", locations);
+	console.log("Locations from Context 2:: ", locations);
 }
 

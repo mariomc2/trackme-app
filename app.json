@@ -22,7 +22,8 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
-    }
+      "bundleIdentifier": "com.mariomc2.TrackMe"
+    },
+    "description": ""
   }
 }
