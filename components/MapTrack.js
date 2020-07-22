@@ -11,6 +11,7 @@ const MapTrack = () =>{
   const { tracking, dispatch } = useContext(TrackContext);
   const [locations, setLocations] = useState(null);
   const [error, setError] = useState(false);
+  const [watcher, setWatcher] = useState(null);
 
   // When loads component
   useEffect(() => {
@@ -19,33 +20,48 @@ const MapTrack = () =>{
       if (status !== 'granted') {
         setError(true);
       }
-
-      if(!tracking.isTracking){
-        Location.watchPositionAsync({accuracy: Location.Accuracy.BestForNavigation}, (location) => setLocations([location]));
-      }
     })();
-
-    return function cleanup(){
-      Location.watchPositionAsync({}, null);
-    }
   },[]);
+
+  useEffect(() => {
+    // Cleanup variables when moving out of screen
+    return function cleanup(){
+      if(watcher!=null){
+        watcher.remove();
+        setWatcher(null);
+      }
+    }
+  },[watcher]);
 
   // Update the map location with background location
   useEffect(() => {
     if(tracking.isTracking && tracking.locations)
         setLocations(tracking.locations);
 
-  },[tracking]);
+  },[tracking.locations]);
 
   // Switch to the normal location
   useEffect(() => {
+    // If it is tracking make sure the watch position is off
     if(tracking.isTracking){
-      Location.watchPositionAsync({}, null);
+      if(watcher!=null){
+        console.log("  Remove watch position");
+        watcher.remove();
+      }
+      setWatcher(null);
     }
+    // If it switch off the traking then start watch position
     else{
-      Location.watchPositionAsync({accuracy: Location.Accuracy.BestForNavigation}, (location) => setLocations([location]));
+      if(watcher==null){
+        console.log("  Initialize watch position");
+        (async () =>{
+          setWatcher(await Location.watchPositionAsync({accuracy: Location.Accuracy.BestForNavigation}, 
+            (location) => {
+              setLocations([location]);
+          }));
+        })();          
+      }
     }
-
   },[tracking.isTracking]);
 
   return (
